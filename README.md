@@ -264,6 +264,57 @@ Imagen3
 Imagen3-Fast
 
 
+## 环境变量配置
+
+项目使用以下环境变量进行配置：
+
+| 环境变量 | 说明 | 是否必需 | 默认值 |
+|---------|------|---------|--------|
+| `POE_API_KEY` | POE API密钥，多个密钥用逗号分隔 | 是 | - |
+| `ACCESS_TOKEN` | 访问令牌，用于验证API调用，多个令牌用逗号分隔 | 是 | - |
+| `PORT` | 服务监听端口 | 否 | 3700 |
+| `TIMEOUT` | API请求超时时间（秒） | 否 | 120 |
+| `PROXY` | 代理服务器地址（如果需要） | 否 | - |
+
+### 使用方法
+
+1. 使用 Docker Compose（推荐）：
+   ```bash
+   # 创建 .env 文件
+   cat > .env << EOF
+   POE_API_KEY=your-poe-api-key-1,your-poe-api-key-2
+   ACCESS_TOKEN=your-access-token-1,your-access-token-2
+   PORT=3700
+   TIMEOUT=120
+   PROXY=http://your-proxy:port
+   EOF
+
+   # 启动服务
+   docker-compose up -d
+   ```
+
+2. 使用 Docker：
+   ```bash
+   docker run -d \
+     -e POE_API_KEY=your-poe-api-key-1,your-poe-api-key-2 \
+     -e ACCESS_TOKEN=your-access-token-1,your-access-token-2 \
+     -e PORT=3700 \
+     -e TIMEOUT=120 \
+     -e PROXY=http://your-proxy:port \
+     -p 3700:3700 \
+     poe-to-gpt
+   ```
+
+3. 直接运行：
+   ```bash
+   export POE_API_KEY=your-poe-api-key-1,your-poe-api-key-2
+   export ACCESS_TOKEN=your-access-token-1,your-access-token-2
+   export PORT=3700
+   export TIMEOUT=120
+   export PROXY=http://your-proxy:port
+   python app.py
+   ```
+
 ## 鸣谢
 - https://github.com/juzeon/poe-openai-proxy
 - https://developer.poe.com/server-bots/accessing-other-bots-on-poe
