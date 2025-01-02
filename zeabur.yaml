@@ -1,0 +1,30 @@
+builds:
+  - name: poe-to-gpt
+    context: .
+    dockerfile: Dockerfile
+    env:
+      - name: POE_API_KEY
+        description: "Your Poe API key (required for subscribers)"
+        required: true
+      - name: ACCESS_TOKEN
+        description: "Custom API access token for authentication"
+        required: true
+      - name: PROXY
+        description: "Proxy URL for connecting to poe.com (optional)"
+        required: false
+      - name: PORT
+        description: "Port number for the service"
+        value: "3700"
+      - name: TIMEOUT
+        description: "Request timeout in seconds"
+        value: "120"
+
+services:
+  - name: poe-to-gpt
+    port: 3700
+    env:
+      - POE_API_KEY
+      - ACCESS_TOKEN
+      - PROXY
+      - PORT
+      - TIMEOUT
