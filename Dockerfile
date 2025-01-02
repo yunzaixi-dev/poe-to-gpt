@@ -6,9 +6,12 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
-# 设置环境变量
+# 设置默认环境变量
 ENV PORT=3700 \
-    TIMEOUT=120
+    TIMEOUT=120 \
+    PROXY="" \
+    POE_API_KEY="" \
+    ACCESS_TOKEN=""
 
 # 复制应用代码
 COPY app.py .

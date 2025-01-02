@@ -5,7 +5,11 @@ services:
     build: .
     image: poe-to-gpt
     ports:
-      - "3700:3700"
-    volumes:
-      - ./config.toml:/app/config.toml
+      - "${PORT:-3700}:3700"
+    environment:
+      - PORT=${PORT:-3700}
+      - TIMEOUT=${TIMEOUT:-120}
+      - PROXY=${PROXY:-}
+      - POE_API_KEY=${POE_API_KEY}
+      - ACCESS_TOKEN=${ACCESS_TOKEN}
     restart: unless-stopped

@@ -3,8 +3,6 @@ from pydantic import BaseModel
 import asyncio
 import uvicorn
 import os
-import toml
-import sys
 import logging
 import itertools
 import json
@@ -19,10 +17,12 @@ app = FastAPI()
 security = HTTPBearer()
 router = APIRouter()
 
-file_path = os.path.abspath(sys.argv[0])
-file_dir = os.path.dirname(file_path)
-config_path = os.path.join(file_dir, "config.toml")
-config = toml.load(config_path)
+# 从环境变量获取配置
+PORT = int(os.getenv("PORT", "3700"))
+TIMEOUT = int(os.getenv("TIMEOUT", "120"))
+PROXY_URL = os.getenv("PROXY", "")
+API_KEYS = os.getenv("POE_API_KEY", "").split(",")
+ACCESS_TOKENS = set(os.getenv("ACCESS_TOKEN", "").split(","))
 
 # 设置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -30,14 +30,10 @@ logger = logging.getLogger(__name__)
 
 # 初始化代理
 proxy = None
-timeout = config.get("timeout", 120)  # 默认120秒超时
-if not config.get("proxy"):
-    proxy = AsyncClient(timeout=timeout)
+if not PROXY_URL:
+    proxy = AsyncClient(timeout=TIMEOUT)
 else:
-    proxy = AsyncClient(proxy=config.get("proxy"), timeout=timeout)
-
-# 获取访问令牌列表
-access_tokens = set(config.get("accessTokens", []))
+    proxy = AsyncClient(proxy=PROXY_URL, timeout=TIMEOUT)
 
 # 初始化客户端字典和API密钥循环
 client_dict = {}
@@ -170,7 +166,7 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
             detail="Invalid authentication credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    if credentials.credentials not in access_tokens:
+    if credentials.credentials not in ACCESS_TOKENS:
         raise HTTPException(
             status_code=401,
             detail="Invalid API key",
@@ -307,20 +303,20 @@ app.include_router(router)
 
 
 async def main(tokens: List[str] = None):
-    try:
-        await initialize_tokens(tokens)
-        conf = uvicorn.Config(
-            app,
-            host="0.0.0.0",
-            port=config.get('port', 5100),
-            log_level="info"
-        )
-        server = uvicorn.Server(conf)
-        await server.serve()
-    except Exception as e:
-        logger.error(f"Failed to start server: {str(e)}")
-        sys.exit(1)
+    """
+    主函数，初始化API令牌并启动服务器
+    """
+    if not tokens and not API_KEYS:
+        logger.error("No API tokens provided")
+        return
+
+    tokens_to_use = tokens if tokens else API_KEYS
+    await initialize_tokens(tokens_to_use)
+    
+    config = uvicorn.Config(app, host="0.0.0.0", port=PORT)
+    server = uvicorn.Server(config)
+    await server.serve()
 
 
 if __name__ == "__main__":
-    asyncio.run(main(config.get("apikey", [])))
+    asyncio.run(main())
