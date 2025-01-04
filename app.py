@@ -41,19 +41,19 @@ client_dict = {}
 api_key_cycle = None
 
 bot_names = {
-    "Assistant", "GPT-3.5-Turbo", "GPT-3.5-Turbo-16k", "GPT-3.5-Turbo-lnstruct", "GPT-4o", "GPT-4o-128k",
-    "GPT-4o-Mini", "GPT-4o-Mini-128k", "ChatGPT-4o-Latest", "ChatGPT-4o-Latest-128k", "GPT-4o-Aug-128k",
-    "o1", "o1-mini", "o1-preview", "Claude-3.5-Sonnet", "Claude-3.5-Sonnet-200k", "Claude-3.5-Haiku",
-    "Claude-3.5-Haiku-200k", "Claude-3.5-Sonnet-June", "Claude-3.5-Sonnet-June-200k", "Claude-3-opus",
-    "Claude-3-opus-200k", "Claude-3-Sonnet", "Claude-3-Sonnet-200k", "Claude-3-Haiku", "Claude-3-Haiku-200k",
-    "Gemini-2.0-Flash","Gemini-1.5-Pro", "Gemini-1.5-Pro-Search", "Gemini-1.5-Pro-128k", "Gemini-1.5-Pro-2M", "Gemini-1.5-Flash",
-    "Gemini-1.5-Flash-Search", "Gemini-1.5-Flash-128k", "Gemini-1.5-Flash-1M", "Grok-beta","Qwen-QwQ-32b-preview",
-    "Qwen-2.5-Coder-32B-T", "Qwen-2.5-72B-T", "Llama-3.1-405B", "Llama-3.1-405B-T", "Llama-3.1-405B-FP16",
-    "Llama-3.1-405B-FW-128k", "Llama-3.1-70B", "Llama-3.1-70B-FP16", "Llama-3.1-70B-T-128k",
-    "Llama-3.1-70B-FW-128k", "Llama-3.1-8B", "Llama-3.1-8B-FP16", "Llama-3.1-8B-T-128k", "DALL-E-3",
-    "StableDiffusionXL", "StableDiffusion3.5-T", "StableDiffusion3.5-L", "StableDiffusion3", "SD3-Turbo",
-    "FLUX-pro", "FLUX-pro-1.1", "FLUX-pro-1.1-T", "FLUX-pro-1.1-ultra", "FLUX-schnell", "FLUX-dev",
-    "Luma-Photon", "Luma-Photon-Flash", "Playground-v3", "Ideogram-v2", "Imagen3", "Imagen3-Fast"
+    "assistant", "gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-3.5-turbo-instruct", "gpt-4", "gpt-4-128k",
+    "gpt-4-mini", "gpt-4-mini-128k", "chatgpt-4-latest", "chatgpt-4-latest-128k", "gpt-4-aug-128k",
+    "o1", "o1-mini", "o1-preview", "claude-3.5-sonnet", "claude-3.5-sonnet-200k", "claude-3.5-haiku",
+    "claude-3.5-haiku-200k", "claude-3.5-sonnet-june", "claude-3.5-sonnet-june-200k", "claude-3-opus",
+    "claude-3-opus-200k", "claude-3-sonnet", "claude-3-sonnet-200k", "claude-3-haiku", "claude-3-haiku-200k",
+    "gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-pro-search", "gemini-1.5-pro-128k", "gemini-1.5-pro-2m", "gemini-1.5-flash",
+    "gemini-1.5-flash-search", "gemini-1.5-flash-128k", "gemini-1.5-flash-1m", "grok-beta", "qwen-qwq-32b-preview",
+    "qwen-2.5-coder-32b-t", "qwen-2.5-72b-t", "llama-3.1-405b", "llama-3.1-405b-t", "llama-3.1-405b-fp16",
+    "llama-3.1-405b-fw-128k", "llama-3.1-70b", "llama-3.1-70b-fp16", "llama-3.1-70b-t-128k",
+    "llama-3.1-70b-fw-128k", "llama-3.1-8b", "llama-3.1-8b-fp16", "llama-3.1-8b-t-128k", "dall-e-3",
+    "stablediffusionxl", "stablediffusion3.5-t", "stablediffusion3.5-l", "stablediffusion3", "sd3-turbo",
+    "flux-pro", "flux-pro-1.1", "flux-pro-1.1-t", "flux-pro-1.1-ultra", "flux-schnell", "flux-dev",
+    "luma-photon", "luma-photon-flash", "playground-v3", "ideogram-v2", "imagen3", "imagen3-fast"
 }
 
 bot_names_map = {name.lower(): name for name in bot_names}
