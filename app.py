@@ -10,6 +10,7 @@ from httpx import AsyncClient
 from fastapi import FastAPI, HTTPException, Depends, APIRouter
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi_poe.types import ProtocolMessage
 from fastapi_poe.client import get_bot_response, get_final_response, QueryRequest
 
@@ -175,9 +176,16 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
     return credentials.credentials
 
 
-@router.post("/v1/chat/completions")
-@router.post("/chat/completions")
-async def create_completion(request: CompletionRequest, token: str = Depends(verify_token)):
+@app.get("/v1/models")
+async def list_models(token: str = Depends(verify_token)):
+    return {
+        "data": [{"id": name, "object": "model"} for name in bot_names],
+        "object": "list"
+    }
+
+
+@app.post("/v1/chat/completions")
+async def chat_completions(request: CompletionRequest, token: str = Depends(verify_token)):
     request_id = "chat$poe-to-gpt$-" + token[:6]
 
     try:
@@ -283,6 +291,12 @@ async def create_completion(request: CompletionRequest, token: str = Depends(ver
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# Keep the original endpoint for backward compatibility
+@app.post("/chat/completions")
+async def chat_completions_legacy(request: CompletionRequest, token: str = Depends(verify_token)):
+    return await chat_completions(request, token)
+
+
 async def initialize_tokens(tokens: List[str]):
     if not tokens or all(not token for token in tokens):
         logger.error("No API keys found in the configuration.")
@@ -299,7 +313,14 @@ async def initialize_tokens(tokens: List[str]):
             logger.info(f"Successfully initialized {len(client_dict)} API tokens")
 
 
-app.include_router(router)
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 
 async def main(tokens: List[str] = None):
